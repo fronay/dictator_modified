@@ -1,0 +1,12 @@
+{% extends "global/Page.html" %}
+{% load otree_tags staticfiles %}
+
+{% block title %}Prediction{% endblock %}
+{% block content %}
+<h1>Receiver's Prediction</h1>
+<p>Hi, Receiver! What amount out of {{ Constants.endowment }} do you believe you will receive? </p>
+
+{% formfield group.predicted %}
+
+{% next_button %}
+{% endblock %}
