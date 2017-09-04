@@ -15,13 +15,19 @@ if environ.get('OTREE_PRODUCTION') not in {None, '', '0'}:
 else:
     DEBUG = True
 
-ADMIN_USERNAME = 'admin'
+# disabling debug in hard-coded fashion for now:
+DEBUG = False
+
+ADMIN_USERNAME = 'NBU'
+
+# for actual study, change this to strong password using ENV not settings.py:
+ADMIN_PASSWORD = "default"
 
 # for security, best to set admin password in an environment variable
-ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
+# ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
 # don't share this with anybody.
-SECRET_KEY = 'ssq!u#scxer8j+@mr@ehj=8ai)#_m_1)p^%gzf*3#^*s^ti5no'
+SECRET_KEY = "ssq!u#scxer8j+@mr@ehj=8ai)#_m_1)p^%gzf*3#^*s^ti5no"
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -47,7 +53,10 @@ DATABASES = {
 # to DEMO. This will allow people to play in demo mode, but not access
 # the full admin interface.
 
-AUTH_LEVEL = environ.get('OTREE_AUTH_LEVEL')
+# Set via environment variables:
+# AUTH_LEVEL = environ.get('OTREE_AUTH_LEVEL')
+
+AUTH_LEVEL = "STUDY"
 
 # setting for integration with AWS Mturk
 AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID')
@@ -55,7 +64,7 @@ AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_ACCESS_KEY')
 
 
 # e.g. EUR, CAD, GBP, CHF, CNY, JPY
-REAL_WORLD_CURRENCY_CODE = 'USD'
+REAL_WORLD_CURRENCY_CODE = 'EUR'
 USE_POINTS = True
 
 
@@ -108,6 +117,15 @@ SESSION_CONFIGS = [
     }
 ]
 
+ROOM_DEFAULTS = {}
+
+ROOMS = [
+    {
+        "name": "NBU_test",
+        "display_name": "NBU modified dictator test room",
+        "participant_label_file": "session_changes/participant_label_file.txt",
+    },
+]
 # anything you put after the below line will override
 # oTree's default settings. Use with caution.
 otree.settings.augment_settings(globals())

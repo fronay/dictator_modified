@@ -30,7 +30,6 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
 	pass
 
-
 class Group(BaseGroup):
 	kept = models.CurrencyField(
 		doc="""Amount allocator decided to keep for himself""",
