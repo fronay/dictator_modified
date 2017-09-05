@@ -5,7 +5,10 @@
 
 {% block content %}
 <p>
-You are <strong>Participant 1</strong>. Now please decide how much you will keep for yourself.
+	Welcome to game round number <strong> {{round_number}}</strong>
+</p>
+<p>
+Participant number <strong> {{participant_id}}</strong>, in your function as <strong>{{role}}</strong>, please decide how much you will keep for yourself.
 </p>
 
 {% formfield group.kept %}

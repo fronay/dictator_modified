@@ -56,7 +56,7 @@ DATABASES = {
 # Set via environment variables:
 # AUTH_LEVEL = environ.get('OTREE_AUTH_LEVEL')
 
-AUTH_LEVEL = "STUDY"
+AUTH_LEVEL = "DEMO"
 
 # setting for integration with AWS Mturk
 AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID')
@@ -112,7 +112,7 @@ SESSION_CONFIGS = [
     { 
         'name': 'dictator_modified',
         'display_name': 'Modified Dictator Experiment',
-        'num_demo_participants': 2,
+        'num_demo_participants': 3,
         'app_sequence': ['dictator_modified']
     }
 ]

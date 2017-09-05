@@ -2,9 +2,10 @@
 {% load otree_tags staticfiles %}
 
 {% block title %}Rating{% endblock %}
+
 {% block content %}
-<h1>Receiver's Rating</h1>
-<p>You received {{ Results.offer }}. How would you rate this allocation? </p>
+<h3>Receiver's Rating</h3>
+<p>You received {{ offer }}. How would you rate this allocation? </p>
 
 {% formfield group.rating %}
 
