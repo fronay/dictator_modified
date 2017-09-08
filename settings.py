@@ -105,7 +105,7 @@ SESSION_CONFIG_DEFAULTS = {
     'participation_fee': 0.00,
     'doc': "",
     'mturk_hit_settings': mturk_hit_settings,
-    'use_browser_bots': True,
+    'use_browser_bots': False,
 }
 
 
@@ -113,7 +113,8 @@ SESSION_CONFIGS = [
     { 
         'name': 'dictator_modified',
         'display_name': 'Modified Dictator Experiment',
-        'num_demo_participants': 3,
+        # change this to 1 for bot game
+        'num_demo_participants': 1,
         'app_sequence': ['dictator_modified']
     }
 ]

@@ -9,6 +9,7 @@ def vars_for_all_templates(self):
 			"role": self.player.role
 	}
 
+
 class Introduction(Page):
 	"""intro page with instructions, should show for all players"""
 	# this should only be shown at the start
@@ -16,16 +17,19 @@ class Introduction(Page):
 		return self.round_number <= 1
 
 class Prediction(Page):
-	"""prediction page for potential amount receiver, should only show for receiver"""
+	"""prediction page for potential amount received, should only show for receiver"""
 	form_model = models.Group
 	form_fields = ["predicted"]
 	def vars_for_template(self):
 		return {
 			"other_player": models.ACTIVE_PLAYER_ID,
+			# TODO: implement more general photo file structure for larger participant list
 			"image_path": 'dictator_modified/img{}.jpg'.format(models.ACTIVE_PLAYER_ID)
 		}
 	def is_displayed(self):
 		return self.player.role() == "receiver"
+	def before_next_page(self):
+		self.group.set_payoffs()
 
 class Offer(Page):
 	"""offer page for dictator to decide how much to share with receiver
@@ -48,12 +52,14 @@ class Rating(Page):
 	"""receiver rates fairness of offer"""
 	form_model = models.Group
 	form_fields = ["rating"]
-	def offer(self):
-		return Constants.endowment - self.group.kept
 	def vars_for_template(self):
+		if Constants.use_dictator_bots:
+			offer = self.player.bot_money_earned
+		else:
+			offer = Constants.endowment - self.group.kept
 		return {
 			'endowment': Constants.endowment,
-			'offer': Constants.endowment - self.group.kept,
+			'offer': offer,
 		}
 	def is_displayed(self):
 		return self.player.role() == "receiver"
@@ -61,10 +67,13 @@ class Rating(Page):
 class ToggleWaitPage(WaitPage):
 	"""shown when ready to switch dictators - functionally, this is the end of the round"""
 	def after_all_players_arrive(self):
-		# set payoffs
-		self.group.set_payoffs()
+		# set payoffs here if in 3-person game
+		# TODO: migrate to before_next_page on offer page, since all info there already!
+		if Constants.use_dictator_bots:
+			self.group.set_payoffs()
 		# toggle activity status of player for different dictator next round:
 		models.ACTIVE_PLAYER_ID = models.toggle_player_id( models.ACTIVE_PLAYER_ID )
+
 	def vars_for_template(self):
 		# get activity status of players from tracking dictionary in models:
 		# generate message for wait screen during testing:

@@ -1,0 +1,16 @@
+{% extends "dictator_modified/StyledPage.html" %}
+
+{% comment %} 
+	Delete/comment out "extends" line above and revert to this if only want global style:
+	{% extends "global/Page.html" %} 
+{% endcomment %}
+
+{% load otree_tags %}
+
+{% block title %}Introduction{% endblock %}
+
+{% block content %}
+<p> Hello and welcome to the game! Your group id is {{participant_id}} and your role in this game is {{role}}</p>
+{% include Constants.instructions_template %}
+{% next_button %}
+{% endblock %}
