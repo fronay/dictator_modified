@@ -105,6 +105,7 @@ SESSION_CONFIG_DEFAULTS = {
     'participation_fee': 0.00,
     'doc': "",
     'mturk_hit_settings': mturk_hit_settings,
+    'use_browser_bots': True,
 }
 
 
