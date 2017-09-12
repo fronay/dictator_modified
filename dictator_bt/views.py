@@ -59,8 +59,6 @@ class Rating(Page):
 			'endowment': Constants.endowment,
 			'offer': offer,
 		}
-	#def before_next_page(self):
-	#	models.ACTIVE_BOT_ID = models.toggle_bot_id( models.ACTIVE_BOT_ID )
 
 class FinalPage(Page):
 	"""def vars_for_template(self):

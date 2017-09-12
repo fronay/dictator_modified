@@ -48,14 +48,16 @@ class Constants(BaseConstants):
 ACTIVE_PLAYER_ID = 2
 
 
+"""
 def toggle_player_id(id):
-	"""set active_player_id equal to this function when switching between dictators"""
+	#set active_player_id equal to this function when switching between dictators
 	if id == 2:
 		return 3
 	elif id == 3:
 		return 2
 	else:
 		raise ValueError("Unexpected player id, expecting id to be 2 or 3")
+"""
 
 class Group(BaseGroup):
 	kept = models.CurrencyField(
@@ -69,13 +71,17 @@ class Group(BaseGroup):
 		verbose_name="I will most likely receive (from 0 to {})".format(Constants.endowment)
 	)
 
-
 	rating = models.PositiveIntegerField(
 	choices=[
 		[1, 'Fair'],
 		[0, 'Unfair'],
 		]
 	)
+
+	def active_player_id(self):
+		# on even turns, bot 1 is active, otherwise bot 2
+		player_id = 2 if self.round_number % 2 != 0 else 3 
+		return player_id
 
 	def set_payoffs(self):
 		p1 = self.get_player_by_id(1)
