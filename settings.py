@@ -103,19 +103,26 @@ mturk_hit_settings = {
 SESSION_CONFIG_DEFAULTS = {
     'real_world_currency_per_point': 0.000,
     'participation_fee': 0.00,
-    'doc': "",
     'mturk_hit_settings': mturk_hit_settings,
     'use_browser_bots': False,
+    'doc': "TBC",
 }
 
 
 SESSION_CONFIGS = [
     { 
-        'name': 'dictator_modified',
-        'display_name': 'Modified Dictator Experiment',
-        # change this to 1 for bot game
+        'name': 'dictator_bt',
+        'display_name': 'Modified Dictator Experiment / version bt',
+        'app_sequence': ['dictator_bt'],
+        'num_rounds': 3,
         'num_demo_participants': 1,
-        'app_sequence': ['dictator_modified']
+    },
+    { 
+        'name': 'dictator_modified',
+        'display_name': 'Modified Dictator Experiment / version reg',
+        'app_sequence': ['dictator_modified'],
+        'num_rounds': 3,
+        'num_demo_participants': 3,
     }
 ]
 

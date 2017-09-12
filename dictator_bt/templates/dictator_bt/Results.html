@@ -1,0 +1,25 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Results
+{% endblock %}
+
+{% block content %}
+	{% if player.role == "dictator" %}
+		<p>
+			You decided to keep <strong>{{ group.kept }}</strong> for yourself.
+		</p>
+	{% elif player.role == "receiver" %}
+		<p>				
+			Oops! Programming mistake. You should not be seeing this page :) Instead, you should be seeing the ratings page directly... 
+		</p>
+
+	{% else %}
+		<p>
+			Error: "{{player.role}} is not a recognised player role.
+		</p>
+	{% endif %}
+	{% next_button %}
+	{% include Constants.instructions_template %}
+{% endblock %}

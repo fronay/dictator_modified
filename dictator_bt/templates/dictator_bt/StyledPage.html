@@ -1,0 +1,29 @@
+{% extends "global/Page.html" %}
+
+{% comment %} 
+	This page is used to apply custom styles to dictator_modified app
+{% endcomment %}
+
+{% load staticfiles otree_tags %}
+
+{% block app_styles %}
+    <style type="text/css">
+        /*  general styles for testing go here:;
+        * {
+        	color:blue;
+        	font-style: italic;
+        }
+        */
+		.centered {
+			text-align: center;
+		}
+
+		img.centered {
+			display:block;
+			margin: 0 auto;
+		}
+
+
+    </style>
+
+{% endblock %}

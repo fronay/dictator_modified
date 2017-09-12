@@ -1,0 +1,20 @@
+{% extends "global/Page.html" %}
+{% load otree_tags %}
+
+{% block title %}Your Decision{% endblock %}
+
+{% block content %}
+<p>
+	Welcome to game round number <strong> {{round_number}}</strong>
+</p>
+<p>
+Participant number <strong> {{participant_id}}</strong>, in your function as <strong>{{role}}</strong>, please decide how much you will keep for yourself.
+</p>
+
+{% formfield group.kept %}
+
+{% next_button %}
+
+    {% include Constants.instructions_template %}
+
+{% endblock %}

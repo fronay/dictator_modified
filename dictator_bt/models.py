@@ -14,17 +14,16 @@ class Subsession(BaseSubsession):
 
 class Constants(BaseConstants):
 	# use_dictator_bots is used in rest of app to modify behavior
-	use_dictator_bots = False 
+	use_dictator_bots = True 
 	# use_dictator_bots = settings.SESSION_CONFIGS[0]["use_dictator_bots"]
-	# define players per group depending on use of bots
-	players_per_group = 3
+	players_per_group = None
 	# specific instructions template to load
 	instructions_template = "dictator_modified/Instructions.html"
 	# Initial amount allocated to the dictator
 	### TODO: set via configs
 	endowment = c(100)
 	# name in url
-	name_in_url = "dictator_modified"
+	name_in_url = "dictator_bt"
 	# for dictator bots, need to generate series of values to use
 	# (for later experiments, can use text file if set in stone)
 	def timeseries(rounds):
@@ -91,7 +90,8 @@ class Group(BaseGroup):
 			# get time series:
 			dictator_offer = Constants.timeseries(Constants.num_rounds)[self.round_number - 1]
 			print('*******offer value is', dictator_offer)
-			p1.bot_money_earned = Constants.endowment - c(dictator_offer)
+			p1.payoff = Constants.endowment - dictator_offer
+			# p1.bot_money_earned = Constants.endowment - c(dictator_offer)
 
 
 

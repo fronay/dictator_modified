@@ -14,7 +14,7 @@ class Introduction(Page):
 	# this should only be shown at the start
 	def vars_for_template(self):
 		return {
-			"test_message": " "#Constants.return_num_rounds(self),
+			"test_message": " "# Constants.return_num_rounds(self),
 		}
 	def is_displayed(self):
 		return self.round_number <= 1

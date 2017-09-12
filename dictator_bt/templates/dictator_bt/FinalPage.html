@@ -1,0 +1,15 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    End of Game
+{% endblock %}
+
+{% block content %}
+    <p>
+        That's it - you have completed all <strong>{{round_number}}</strong> rounds of the game!
+    </p>
+    <p>
+        Thank you for participating in the experiment!
+    </p>
+{% endblock %}
