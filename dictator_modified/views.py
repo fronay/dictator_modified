@@ -40,7 +40,7 @@ class Offer(Page):
 	form_fields = ["kept"]
 	def is_displayed(self):
 		# show only to active dictator
-		return self.player.role() == "dictator" and self.player.id_in_group == self.group.active_player_id()
+		return self.player.role() == "dictator" and self.player.is_active()
 	def before_next_page(self):
 		self.group.set_payoffs()
 
@@ -57,10 +57,7 @@ class Rating(Page):
 	form_model = models.Group
 	form_fields = ["rating"]
 	def vars_for_template(self):
-		if Constants.use_dictator_bots:
-			offer = self.player.bot_money_earned
-		else:
-			offer = Constants.endowment - self.group.kept
+		offer = Constants.endowment - self.group.kept
 		return {
 			'endowment': Constants.endowment,
 			'offer': offer,
@@ -73,10 +70,7 @@ class ToggleWaitPage(WaitPage):
 	def after_all_players_arrive(self):
 		# set payoffs here if in 3-person game
 		# TODO: migrate to before_next_page on offer page, since all info there already!
-		if Constants.use_dictator_bots:
-			self.group.set_payoffs()
-		# toggle activity status of player for different dictator next round:
-		# models.ACTIVE_PLAYER_ID = models.toggle_player_id( models.ACTIVE_PLAYER_ID )
+		self.group.set_payoffs()
 
 	def vars_for_template(self):
 		# get activity status of players from tracking dictionary in models:
@@ -86,7 +80,7 @@ class ToggleWaitPage(WaitPage):
 		body_text = """Thanks for your patience, participant {0}. Your role is (still) {1}.\n \n
 				Waiting for the other 2 participants to end their turn.""".format(*inputs)
 		# conditionally add a message about the dictator's sharing choice if they were active last round:
-		if self.player.role() == "dictator" and self.player.id_in_group == self.group.active_player_id():
+		if self.player.role() == "dictator" and self.player.is_active():
 			choice_message = "You completed your turn. You kept {0} out of {1} off the payoff. \n \n".format(self.group.kept, Constants.endowment)
 			body_text = choice_message + body_text
 		return {"body_text": body_text}

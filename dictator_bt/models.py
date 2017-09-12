@@ -31,7 +31,7 @@ class Constants(BaseConstants):
 		# define amounts the dictator
 		fair, generous, mean = (50.0, 65.0, 20.0)
 		# test case: just return 50 or 75 each time
-		return [50,75]*10
+		return [fair,generous,mean]*rounds
 	# current variable round tactic as per Otree docs: high round number, with final screen selectively shown
 	### TODO: set via configs - try using return_num_rounds function
 	def return_num_rounds(self):
@@ -40,23 +40,6 @@ class Constants(BaseConstants):
 	# setting this to large number, actual round number set by config settings!
 	# (Otree requires this to be set in Constants, hence putting in arbitrary default)
 	num_rounds = 100 # settings.SESSION_CONFIGS[0]["num_rounds"]
-
-# Active player id used to toggle between roles for human dictator players
-# player_2 active means that player_3 (i.e. the other dictator) sees waitscreen
-# then toggled, and player_3 is active while player_2 waits
-
-# ACTIVE_BOT_ID = 2
-
-"""
-def toggle_bot_id(id):
-	# set active_player_id equal to this function when switching between dictators
-	if id == 2:
-		return 3
-	elif id == 3:
-		return 2
-	else:
-		raise ValueError("Unexpected player id, expecting id to be 2 or 3")
-"""
 
 class Group(BaseGroup):
 	def active_bot_id(self):

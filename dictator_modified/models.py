@@ -32,7 +32,7 @@ class Constants(BaseConstants):
 		# define amounts the dictator
 		fair, generous, mean = (50.0, 65.0, 20.0)
 		# test case: just return 50 each time
-		return [fair]*rounds
+		return [fair, generous, mean]*rounds
 	# current variable round tactic as per Otree docs: high round number, with final screen selectively shown
 	### TODO: set via configs - try using return_num_rounds function
 	def return_num_rounds(self):
@@ -41,23 +41,6 @@ class Constants(BaseConstants):
 	# setting this to large number, actual round number set by config settings!
 	# (Otree requires this to be set in Constants, hence putting in arbitrary default)
 	num_rounds = 100 # settings.SESSION_CONFIGS[0]["num_rounds"]
-
-# Active player id used to toggle between roles for human dictator players
-# player_2 active means that player_3 (i.e. the other dictator) sees waitscreen
-# then toggled, and player_3 is active while player_2 waits
-ACTIVE_PLAYER_ID = 2
-
-
-"""
-def toggle_player_id(id):
-	#set active_player_id equal to this function when switching between dictators
-	if id == 2:
-		return 3
-	elif id == 3:
-		return 2
-	else:
-		raise ValueError("Unexpected player id, expecting id to be 2 or 3")
-"""
 
 class Group(BaseGroup):
 	kept = models.CurrencyField(
@@ -79,44 +62,20 @@ class Group(BaseGroup):
 	)
 
 	def active_player_id(self):
+		# this is hard-coded for 3-player game right now
 		# on even turns, bot 1 is active, otherwise bot 2
-		player_id = 2 if self.round_number % 2 != 0 else 3 
-		return player_id
+		active_player_id = 2 if self.round_number % 2 != 0 else 3 
+		return active_player_id
 
 	def set_payoffs(self):
-		p1 = self.get_player_by_id(1)
-		if not Constants.use_dictator_bots:
-			p2 = self.get_player_by_id(2)
-			p3 = self.get_player_by_id(3)
-			p1.payoff = Constants.endowment - self.kept
-			# not sure if I still need payoffs for player 2 / 3, if so will need to change below
-			p2.payoff = self.kept if p2.is_active(ACTIVE_PLAYER_ID) else 0
-			p3.payoff = self.kept if p3.is_active(ACTIVE_PLAYER_ID) else 0
-
-		elif Constants.use_dictator_bots:
-			# get time series:
-			dictator_offer = Constants.timeseries(Constants.num_rounds)[self.round_number - 1]
-			print('*******offer value is', dictator_offer)
-			p1.bot_money_earned = Constants.endowment - c(dictator_offer)
-
-
-
+		receiver = self.get_player_by_id(1)
+		dictator = self.get_player_by_id(self.active_player_id())
+		receiver.payoff = Constants.endowment - self.kept
+		dictator.payoff = self.kept
 
 class Player(BasePlayer):
-	bot_money_earned = models.CurrencyField(
-		# doc="money earned in 1v2 human bot game",
-		min=0, max=Constants.endowment,
-		verbose_name="I will keep (from 0 to {})".format(Constants.endowment)
-	)
-	def is_active(self, active_player_id):
-		return True if self.id_in_group == active_player_id else False
+	def is_active(self):
+		return True if self.id_in_group == self.group.active_player_id() else False
 	def role(self):
 		return "receiver" if self.id_in_group == 1 else "dictator"
-
-
-## test code: one time import to get settings, then remove path again to avoid dep problem
-#import sys
-#sys.path.append("/Users/franzr/Desktop/main_code/NBU_files/dictator_modified")
-#import settings 
-#sys.path.remove("/Users/franzr/Desktop/main_code/NBU_files/dictator_modified")
 
