@@ -1,0 +1,6 @@
+Instructions:
+Introduction:
+Prediction:
+SimulatedWaitPage:
+Rating:
+FinalPage:
