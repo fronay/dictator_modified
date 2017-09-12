@@ -44,20 +44,25 @@ class Constants(BaseConstants):
 # Active player id used to toggle between roles for human dictator players
 # player_2 active means that player_3 (i.e. the other dictator) sees waitscreen
 # then toggled, and player_3 is active while player_2 waits
-ACTIVE_BOT_ID = 2
 
+# ACTIVE_BOT_ID = 2
 
+"""
 def toggle_bot_id(id):
-	"""set active_player_id equal to this function when switching between dictators"""
+	# set active_player_id equal to this function when switching between dictators
 	if id == 2:
 		return 3
 	elif id == 3:
 		return 2
 	else:
 		raise ValueError("Unexpected player id, expecting id to be 2 or 3")
+"""
 
 class Group(BaseGroup):
-	pass
+	def active_bot_id(self):
+		# on even turns, bot 1 is active, otherwise bot 2
+		bot_id = 1 if self.round_number % 2 != 0 else 2 
+		return bot_id
 
 class Player(BasePlayer):
 	def set_payoffs(self):

@@ -25,10 +25,11 @@ class Prediction(Page):
 	form_model = models.Player
 	form_fields = ["predicted"]
 	def vars_for_template(self):
+		active_bot = self.group.active_bot_id()
 		return {
-			"other_player": models.ACTIVE_BOT_ID,
+			"other_player": active_bot,
 			# TODO: implement more general photo file structure for larger participant list
-			"image_path": 'dictator_modified/img{}.jpg'.format(models.ACTIVE_BOT_ID)
+			"image_path": 'dictator_modified/img{}.jpg'.format(active_bot)
 		}
 	def before_next_page(self):
 		self.player.set_payoffs()
@@ -37,7 +38,7 @@ class Prediction(Page):
 class SimulatedWaitPage(Page):
 	def vars_for_template(self):
 		return {
-			"other_player": models.ACTIVE_BOT_ID,
+			"other_player": self.group.active_bot_id(),
 		}
 	def get_timeout_seconds(self):
 		min_delay = 1
@@ -58,8 +59,8 @@ class Rating(Page):
 			'endowment': Constants.endowment,
 			'offer': offer,
 		}
-	def before_next_page(self):
-		models.ACTIVE_BOT_ID = models.toggle_bot_id( models.ACTIVE_BOT_ID )
+	#def before_next_page(self):
+	#	models.ACTIVE_BOT_ID = models.toggle_bot_id( models.ACTIVE_BOT_ID )
 
 class FinalPage(Page):
 	"""def vars_for_template(self):
