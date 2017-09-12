@@ -105,7 +105,7 @@ class Player(BasePlayer):
 	def is_active(self, active_player_id):
 		return True if self.id_in_group == active_player_id else False
 	def role(self):
-		return "receiver" if self.id_in_group == 1 else "dictator"
+		return "receiver" # if self.id_in_group == 1 else "dictator"
 
 
 ## test code: one time import to get settings, then remove path again to avoid dep problem

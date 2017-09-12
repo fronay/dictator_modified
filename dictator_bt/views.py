@@ -102,8 +102,8 @@ class FinalPage(Page):
 page_sequence = [
 	Introduction,
 	Prediction,
-	Offer,
-	WaitForOffer,
+	#Offer,
+	#WaitForOffer,
 	Rating,
 	ToggleWaitPage,
 	FinalPage,
