@@ -47,7 +47,7 @@ class Constants(BaseConstants):
 ACTIVE_BOT_ID = 2
 
 
-def toggle_player_id(id):
+def toggle_bot_id(id):
 	"""set active_player_id equal to this function when switching between dictators"""
 	if id == 2:
 		return 3

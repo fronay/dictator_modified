@@ -40,12 +40,8 @@ class SimulatedWaitPage(Page):
 			"other_player": models.ACTIVE_BOT_ID,
 		}
 	def get_timeout_seconds(self):
-		min_delay = 5
-		return random.random()*10 + min_delay
-		
-	"""def before_next_page(self):
-		max_delay = 5
-		sleep(max_delay)"""
+		min_delay = 1
+		return random.random()*3 + min_delay
 
 class Rating(Page):
 	"""receiver rates fairness of offer"""
@@ -63,7 +59,7 @@ class Rating(Page):
 			'offer': offer,
 		}
 	def before_next_page(self):
-		models.ACTIVE_BOT_ID = models.toggle_player_id( models.ACTIVE_BOT_ID )
+		models.ACTIVE_BOT_ID = models.toggle_bot_id( models.ACTIVE_BOT_ID )
 
 class FinalPage(Page):
 	"""def vars_for_template(self):
