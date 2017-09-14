@@ -7,9 +7,10 @@ from time import sleep
 
 def vars_for_all_templates(self):
 	return {
-			"round_number": self.round_number,
+			"current_round": self.round_number,
+			"max_rounds" : Constants.return_num_rounds(self),
 			"participant_id": self.player.id_in_group,
-			"role": self.player.role
+			"role": self.player.role,
 	}
 
 class Introduction(Page):
@@ -29,7 +30,7 @@ class Prediction(Page):
 		return {
 			"other_player": active_bot,
 			# TODO: implement more general photo file structure for larger participant list
-			"image_path": 'dictator_modified/img{}.jpg'.format(active_bot)
+			"image_path": "dictator_modified/img{}.jpg".format(active_bot),
 		}
 	def before_next_page(self):
 		self.player.set_payoffs()

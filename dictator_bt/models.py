@@ -43,14 +43,40 @@ class Constants(BaseConstants):
 
 class Group(BaseGroup):
 	def active_bot_id(self):
-		# on even turns, bot 1 is active, otherwise bot 2
+		"""on even turns, bot 1 is active, otherwise bot 2"""
 		bot_id = 1 if self.round_number % 2 != 0 else 2 
+		### CAN ALSO DEFINE CUSTOM BOT ACTIVITY HERE
+		### E.G. IF WANT TO PLAY SAME BOT TWICE IN ROW
+		### DONT FORGET TO CHANGE BOT_OFFER() BELOW TO MATCH
+		# also set bot_id in group data so that we can track it in results:
+		self.active_bot_id = bot_id
 		return bot_id
+
+	def bot_offer(self):
+		"""return value for either bot to play in a given round"""
+		fair, generous, mean = (50.0, 65.0, 20.0)
+		# define offer list for two different bots here:
+		nice_bot_timeseries = [fair, generous]*int(Constants.return_num_rounds(self)/2)
+		mean_bot_timeseries = [fair, mean]*int(Constants.return_num_rounds(self)/2)
+		bot_id = self.active_bot_id()
+		###
+		# bot 1 is active in odd rounds (1,3,5) etc and bot 2 is active in even rounds (2,4,6) etc.
+		# hence must index their timeseries with round_number/2 and round_number/2 -1, respectively:
+		if bot_id == 1:
+			# active in odd rounds
+			bot_offer = nice_bot_timeseries[int((self.round_number-1)/2)]
+		elif bot_id == 2:
+			# active in even rounds
+			bot_offer = mean_bot_timeseries[int((self.round_number/2) - 1)]
+		else: 
+			raise ValueError
+		return bot_offer
 
 class Player(BasePlayer):
 	def set_payoffs(self):
 		# get applicable value of time series:
-		self.dictator_offer = Constants.timeseries(Constants.return_num_rounds(self))[self.round_number - 1]
+		# self.dictator_offer = Constants.timeseries(Constants.return_num_rounds(self))[self.round_number - 1]
+		self.dictator_offer = self.group.bot_offer()
 		self.payoff = self.dictator_offer
 
 	predicted = models.CurrencyField(
