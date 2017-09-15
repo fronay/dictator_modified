@@ -15,6 +15,7 @@ col_names = ["participant.id_in_session",
 "player.rating",
 # "bot_id",
 "player.payoff",
+"player.played_against",
 "group.id_in_subsession",
 "subsession.round_number",
 "session.code"]
