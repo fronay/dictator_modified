@@ -50,11 +50,6 @@ class Rating(Page):
 	form_model = models.Player
 	form_fields = ["rating"]
 	def vars_for_template(self):
-		"""if Constants.use_dictator_bots:
-			offer = self.player.bot_money_earned
-		else:
-			offer = Constants.endowment - self.group.kept"""
-		# TODO: set offer here, properly.
 		offer = self.player.payoff
 		return {
 			'endowment': Constants.endowment,

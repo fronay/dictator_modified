@@ -3,6 +3,7 @@ from otree.api import (
 	Currency as c, currency_range
 )
 import random
+import gc
 
 # ------------------------
 doc = """
@@ -13,63 +14,69 @@ class Subsession(BaseSubsession):
 	pass
 
 class Constants(BaseConstants):
-	# use_dictator_bots is used in rest of app to modify behavior
-	use_dictator_bots = True 
-	# use_dictator_bots = settings.SESSION_CONFIGS[0]["use_dictator_bots"]
+	# define custom bot sequence for use by active_bot_id method
+	bot_sequence = (2,2,1,2,1,1,2,2,1,2)
+	# single player version, hence only 1 player per group
 	players_per_group = None
 	# specific instructions template to load
 	instructions_template = "dictator_modified/Instructions.html"
 	# Initial amount allocated to the dictator
-	### TODO: set via configs
 	endowment = c(100)
 	# name in url
 	name_in_url = "dictator_bt"
-	# for dictator bots, need to generate series of values to use
-	# (for later experiments, can use text file if set in stone)
-	def timeseries(rounds):
-		"""returns series of values for dictator bots to present to player"""
-		# define amounts the dictator
-		fair, generous, mean = (50.0, 65.0, 20.0)
-		# test case: just return 50 or 75 each time
-		return [fair,generous,mean]*rounds
 	# current variable round tactic as per Otree docs: high round number, with final screen selectively shown
-	### TODO: set via configs - try using return_num_rounds function
 	def return_num_rounds(self):
-		"""returns round numbers from current session configs"""
+		"""returns actual round numbers from current session configs"""
+		# remember that player will only play half of this number against each bot
 		return self.session.config['num_rounds']
-	# setting this to large number, actual round number set by config settings!
+	# initialising this to large number, actual round number set by config settings!
 	# (Otree requires this to be set in Constants, hence putting in arbitrary default)
-	num_rounds = 100 # settings.SESSION_CONFIGS[0]["num_rounds"]
+	num_rounds = 50 # settings.SESSION_CONFIGS[0]["num_rounds"]
 
 class Group(BaseGroup):
 	def active_bot_id(self):
-		"""on even turns, bot 1 is active, otherwise bot 2"""
-		bot_id = 1 if self.round_number % 2 != 0 else 2 
-		### CAN ALSO DEFINE CUSTOM BOT ACTIVITY HERE
-		### E.G. IF WANT TO PLAY SAME BOT TWICE IN ROW
-		### DONT FORGET TO CHANGE BOT_OFFER() BELOW TO MATCH
-		# also set bot_id in group data so that we can track it in results:
-		# self.active_bot_id = bot_id
+		"""returns active bot id, either alternating or based on custom sequence"""
+		use_custom_sequence = True
+		if not use_custom_sequence:
+			## SIMPLE version - bots just alternate:
+			bot_id = 1 if self.round_number % 2 != 0 else 2 
+		else:
+			## CUSTOM version - bots can sometimes play 2 rounds in a row
+			# fetch order in which they play from Constants
+			bs = Constants.bot_sequence
+			# careful that this matches the intended round number set in configs!
+			assert len(bs) >= self.session.config['num_rounds'], \
+			"length of bot sequence appears to be smaller than the configured max round number"
+			bot_id = bs[self.round_number-1]
 		return bot_id
 
 	def bot_offer(self):
 		"""return value for either bot to play in a given round"""
-		fair, generous, mean = (50.0, 65.0, 20.0)
+		use_custom_sequence = True
 		# define offer list for two different bots here:
+		fair, generous, mean = (50.0, 65.0, 20.0)
 		nice_bot_timeseries = [fair, generous]*int(Constants.return_num_rounds(self)/2)
 		mean_bot_timeseries = [fair, mean]*int(Constants.return_num_rounds(self)/2)
 		bot_id = self.active_bot_id()
-		###
-		# bot 1 is active in odd rounds (1,3,5) etc and bot 2 is active in even rounds (2,4,6) etc.
-		# hence must index their timeseries with round_number/2 and round_number/2 -1, respectively:
-		if bot_id == 1:
-			# active in odd rounds
-			bot_offer = nice_bot_timeseries[int((self.round_number-1)/2)]
-		elif bot_id == 2:
-			# active in even rounds
-			bot_offer = mean_bot_timeseries[int((self.round_number/2) - 1)]
-		else: 
-			raise ValueError
+		if not use_custom_sequence:
+			## SIMPLE VERSION with alternating bots:
+			# bot 1 is active in odd rounds (1,3,5) etc and bot 2 is active in even rounds (2,4,6) etc.
+			# hence must index their timeseries with round_number/2 and round_number/2 -1, respectively:
+			if bot_id == 1:
+				# active in odd rounds
+				bot_offer = nice_bot_timeseries[int((self.round_number-1)/2)]
+			elif bot_id == 2:
+				# active in even rounds
+				bot_offer = mean_bot_timeseries[int((self.round_number/2) - 1)]
+			else: 
+				raise ValueError
+		else:
+			## CUSTOM version, if bots follow custom bot sequence
+			ts = nice_bot_timeseries if bot_id == 1 else mean_bot_timeseries
+			# count which turn (1st, 2nd, nth) of the bot it is, and return appropriate value from timeseries
+			bot_turn_number = Constants.bot_sequence[:self.round_number].count(bot_id)
+			# lists are zero-indexed so subtract 1 from turn for actual offer:
+			bot_offer = ts[bot_turn_number - 1]
 		return bot_offer
 
 class Player(BasePlayer):
@@ -78,7 +85,6 @@ class Player(BasePlayer):
 		# self.dictator_offer = Constants.timeseries(Constants.return_num_rounds(self))[self.round_number - 1]
 		self.dictator_offer = self.group.bot_offer()
 		self.payoff = self.dictator_offer
-		# 
 		self.played_against = self.group.active_bot_id()
 
 	predicted = models.CurrencyField(
