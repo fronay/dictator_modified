@@ -49,7 +49,7 @@ class Group(BaseGroup):
 		### E.G. IF WANT TO PLAY SAME BOT TWICE IN ROW
 		### DONT FORGET TO CHANGE BOT_OFFER() BELOW TO MATCH
 		# also set bot_id in group data so that we can track it in results:
-		self.active_bot_id = bot_id
+		# self.active_bot_id = bot_id
 		return bot_id
 
 	def bot_offer(self):
@@ -78,6 +78,8 @@ class Player(BasePlayer):
 		# self.dictator_offer = Constants.timeseries(Constants.return_num_rounds(self))[self.round_number - 1]
 		self.dictator_offer = self.group.bot_offer()
 		self.payoff = self.dictator_offer
+		# 
+		self.played_against = self.group.active_bot_id()
 
 	predicted = models.CurrencyField(
 		doc="""Amount receiver predicted they would receive from allocator""",
@@ -91,6 +93,12 @@ class Player(BasePlayer):
 		[0, 'Unfair'],
 		]
 	)
+	# test var, see if this shows up in data as well:
+	played_against = models.PositiveIntegerField(
+		doc="""id of bot that player was paired off with in current round""",
+		# this is set in set_payoffs method right now
+		)
+
 	def role(self):
 		return "receiver" 
 
