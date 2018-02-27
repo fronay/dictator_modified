@@ -112,18 +112,25 @@ SESSION_CONFIG_DEFAULTS = {
 SESSION_CONFIGS = [
     { 
         'name': 'dictator_bt',
-        'display_name': 'Modified Dictator Experiment / version bt',
+        'display_name': 'Single Player Dictator Experiment / version bt',
         'app_sequence': ['dictator_bt'],
         'num_rounds': 3,
         'num_demo_participants': 1,
     },
     { 
         'name': 'dictator_modified',
-        'display_name': 'Modified Dictator Experiment / version reg',
+        'display_name': '3 Player Dictator Experiment / version reg',
         'app_sequence': ['dictator_modified'],
         'num_rounds': 3,
         'num_demo_participants': 3,
-    }
+    },
+        { 
+    'name': 'dictator_sp',
+    'display_name': 'TEST (ONGOING) - Incentivised 2-player Dictator Experiment / version tp',
+    'app_sequence': ['dictator_sp'],
+    'num_rounds': 3,
+    'num_demo_participants': 2,
+    },
 ]
 
 ROOM_DEFAULTS = {}
@@ -138,3 +145,4 @@ ROOMS = [
 # anything you put after the below line will override
 # oTree's default settings. Use with caution.
 otree.settings.augment_settings(globals())
+
