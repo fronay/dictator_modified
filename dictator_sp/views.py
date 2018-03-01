@@ -19,7 +19,7 @@ Player 2 sees:
 Welcome 
 Rules
 *What are you going to offer? + CUSTOM INSTRUCTION
-INST 1: HE'LL get X% of what you offer
+FeedbackPage
 End
 """
 
@@ -91,10 +91,31 @@ class Rating(NoActionResult):
 	form_fields = ["rating"]
 
 
-class RejectionResult(NoActionResult):
+class RejectionOption(NoActionResult):
 	"""receiver sees offer and has option of rejecting or accepting """
 	form_model = models.Group
 	form_fields = ["rejected"]
+
+class FeedbackPage(Page):
+	def vars_for_template(self):
+		active_player_id = self.group.active_player_id()
+		rating = self.group.in_round(self.round_number -1).get_rating_display()
+		rejected = self.group.in_round(self.round_number - 1).get_rejected_display()
+		kept = self.group.in_round(self.round_number - 1).kept
+		offer = Constants.endowment - kept
+		return {
+			'other_player': active_player_id,
+			# TODO: implement more general photo file structure for larger participant list
+			'image_path': 'dictator_sp/img{}.jpg'.format(active_player_id),
+			'endowment': Constants.endowment,
+			'kept': kept,
+			'offer': offer,
+			'rating': rating,
+			'rejected': rejected
+		}
+	def is_displayed(self):
+		# show only to active dictator
+		return self.player.role() == "dictator" and self.player.is_active() and self.round_number >= 2 
 
 class ToggleWaitPage(WaitPage):
 	"""shown when ready to switch dictators - functionally, this is the end of the round"""
@@ -128,11 +149,12 @@ class FinalPage(Page):
 page_sequence = [
 	Introduction,
 	Prediction,
+	FeedbackPage,
 	Offer,
 	WaitForOffer,
 	Rating,
 	NoActionResult,
-	RejectionResult,
+	RejectionOption,
 	ToggleWaitPage,
-	FinalPage,
+	FinalPage
 ]

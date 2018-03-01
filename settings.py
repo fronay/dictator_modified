@@ -21,13 +21,13 @@ DEBUG = False
 ADMIN_USERNAME = 'NBU'
 
 # for actual study, change this to strong password using ENV not settings.py:
-ADMIN_PASSWORD = "****"
+ADMIN_PASSWORD = 'default'
 
 # for security, best to set admin password in an environment variable
 # ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
 # don't share this with anybody.
-SECRET_KEY = "*********"
+# SECRET_KEY = "*********"
 
 DATABASES = {
     'default': dj_database_url.config(
