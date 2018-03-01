@@ -1,0 +1,21 @@
+{% extends "global/Page.html" %}
+{% load otree_tags staticfiles %}
+
+{% block title %}Rating{% endblock %}
+
+{% block content %}
+	<h3>
+		Rejection Option
+	</h3>
+	<p>
+		You received {{ offer }} out of {{ endowment }} in this round from the other player. 
+		
+		If you want, you can choose to accept or reject this offer using the buttons below. 
+
+		If you accept, the points will be allocated as offered;
+		if you reject, they will not be allocated this round and neither of you receive any points.
+	</p>
+	{% formfield group.rating %}
+
+{% next_button %}
+{% endblock %}

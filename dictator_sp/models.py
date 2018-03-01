@@ -6,7 +6,7 @@ import random
 
 # ------------------------
 doc = """
-Iterated Dictator Game (version with 2 players, one incentivised)
+Iterated Dictator Game (version with 2 players, one player incentivised)
 """
 
 class Subsession(BaseSubsession):
@@ -21,7 +21,6 @@ class Constants(BaseConstants):
 	# specific instructions template to load
 	instructions_template = "dictator_sp/Instructions.html"
 	# Initial amount allocated to the dictator
-	### TODO: set via configs
 	endowment = c(100)
 	# name in url
 	name_in_url = "dictator_sp"
@@ -34,7 +33,6 @@ class Constants(BaseConstants):
 		# test case: just return 50 each time
 		return [fair, generous, mean]*rounds
 	# current variable round tactic as per Otree docs: high round number, with final screen selectively shown
-	### TODO: set via configs - try using return_num_rounds function
 	def return_num_rounds(self):
 		"""returns round numbers from current session configs"""
 		return self.session.config['num_rounds']
@@ -61,10 +59,16 @@ class Group(BaseGroup):
 		]
 	)
 
+	rejected = models.PositiveIntegerField(
+    choices=[
+        [1, 'Accept'],
+        [0, 'Reject'],
+    ], widget=widgets.RadioSelectHorizontal
+	)
+
 	def active_player_id(self):
-		# this is hard-coded for 3-player game right now
-		# on even turns, bot 1 is active, otherwise bot 2
-		active_player_id = 2 if self.round_number % 2 != 0 else 3 
+		# hardcoded to preserve structure from 3 player version 
+		active_player_id = 2 # if self.round_number % 2 != 0 else 3 
 		return active_player_id
 
 	def set_payoffs(self):

@@ -5,6 +5,22 @@ from .models import Constants
 """
 TODO: NEW LAYOUT for 2P-Version
 
+Player 1 sees:
+Welcome 
+Rules
+*Here's your offer + CUSTOM OPTION
+OPTION 1: FAIR?
+OPTION 2: REJECT? 
+OPTION 3: NO_OP
+End
+
+
+Player 2 sees: 
+Welcome 
+Rules
+*What are you going to offer? + CUSTOM INSTRUCTION
+INST 1: HE'LL get X% of what you offer
+End
 """
 
 
@@ -58,10 +74,8 @@ class WaitForOffer(WaitPage):
 	def is_displayed(self):
 		return self.player.role() == "receiver"
 
-class Rating(Page):
-	"""receiver rates fairness of offer"""
-	form_model = models.Group
-	form_fields = ["rating"]
+class NoActionResult(Page):
+	"""receiver sees results of allocation but has no action option """
 	def vars_for_template(self):
 		offer = Constants.endowment - self.group.kept
 		return {
@@ -70,6 +84,17 @@ class Rating(Page):
 		}
 	def is_displayed(self):
 		return self.player.role() == "receiver"
+
+class Rating(NoActionResult):
+	"""receiver rates fairness of offer"""
+	form_model = models.Group
+	form_fields = ["rating"]
+
+
+class RejectionResult(NoActionResult):
+	"""receiver sees offer and has option of rejecting or accepting """
+	form_model = models.Group
+	form_fields = ["rejected"]
 
 class ToggleWaitPage(WaitPage):
 	"""shown when ready to switch dictators - functionally, this is the end of the round"""
@@ -106,6 +131,8 @@ page_sequence = [
 	Offer,
 	WaitForOffer,
 	Rating,
+	NoActionResult,
+	RejectionResult,
 	ToggleWaitPage,
 	FinalPage,
 ]
