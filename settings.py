@@ -124,13 +124,14 @@ SESSION_CONFIGS = [
         'num_rounds': 3,
         'num_demo_participants': 3,
     },
-        { 
-    'name': 'dictator_sp',
-    'display_name': 'TEST (ONGOING) - Incentivised 2-player Dictator Experiment / version tp',
-    'app_sequence': ['dictator_sp'],
-    'num_rounds': 3,
-    'num_demo_participants': 2,
-    },
+    { 
+        'name': 'dictator_sp',
+        'display_name': 'TEST (ONGOING) - Incentivised 2-player Dictator Experiment / version tp',
+        'app_sequence': ['dictator_sp'],
+        'num_rounds': 10,
+        'options': "reject",
+        'num_demo_participants': 2,
+    }
 ]
 
 ROOM_DEFAULTS = {}

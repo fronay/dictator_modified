@@ -5,11 +5,18 @@
 
 {% block content %}
 <p>
-	This is the end of round number <strong> {{round_number}}</strong>
+	Here is the summary of round <strong> {{decrement_round_number}}</strong>
 </p>
 <p>
 You decided to keep <strong>{{kept}}</strong> and offer <strong>{{offer}}</strong>. <br>
-The other player rated this as <strong>{{rating}}</strong>, while choosing to <strong>{{rejected}}</strong> your offer. <br>
+
+{% if player_option == "reject" %}
+    The other player chose to <strong>{{rejected}}</strong> your offer. 
+{% elif player_option == "rating" %}
+    The other player rated this offer as <strong>{{rating}}</strong>.
+{% endif %}
+<!--The other player rated this as <strong>{{rating}}</strong>, while choosing to <strong>{{rejected}}</strong> your offer. <br>-->
+
 </p>
 
 {% next_button %}

@@ -1,0 +1,5 @@
+# most important:
+- load round data from csv file (or similar)
+- show different incentivisation message 
+- reflect incentivisation in saved database (via multiplier factor or so)
+- (continue configurable rounds)

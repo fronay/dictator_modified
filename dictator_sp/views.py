@@ -39,7 +39,7 @@ class Introduction(Page):
 			"test_message": " "#Constants.return_num_rounds(self),
 		}
 	def is_displayed(self):
-		return self.round_number <= 1
+		return self.round_number == 1
 
 class Prediction(Page):
 	"""prediction page for potential amount received, should only show for receiver"""
@@ -60,6 +60,10 @@ class Offer(Page):
 	...should only be seen by active dictator"""
 	form_model = models.Group
 	form_fields = ["kept"]
+	def vars_for_template(self):
+		return {
+			"dictator_sharing_incentive":Constants.dictator_sharing_incentive[self.round_number]
+		}
 	def is_displayed(self):
 		# show only to active dictator
 		return self.player.role() == "dictator" and self.player.is_active()
@@ -83,27 +87,42 @@ class NoActionResult(Page):
 			'offer': offer,
 		}
 	def is_displayed(self):
-		return self.player.role() == "receiver"
+		# return self.player.role() == "receiver" and self.participant.vars['receiver_option'] == "nothing_option"
+		print("evaluating RejectionOption: ", Constants.receiver_option[self.round_number])
+		return self.player.role() == "receiver" and Constants.receiver_option[self.round_number] == "nothing"
 
 class Rating(NoActionResult):
 	"""receiver rates fairness of offer"""
 	form_model = models.Group
 	form_fields = ["rating"]
-
+	def is_displayed(self):
+		# return self.player.role() == "receiver" and self.participant.vars['receiver_option'] == "rating_option"
+		print("evaluating RejectionOption: ", Constants.receiver_option[self.round_number])
+		return self.player.role() == "receiver" and Constants.receiver_option[self.round_number] == "rating"
 
 class RejectionOption(NoActionResult):
 	"""receiver sees offer and has option of rejecting or accepting """
 	form_model = models.Group
 	form_fields = ["rejected"]
+	def is_displayed(self):
+		# return self.player.role() == "receiver" and self.participant.vars['receiver_option'] == "reject_option"
+		print("evaluating RejectionOption: ", Constants.receiver_option[self.round_number])
+		return self.player.role() == "receiver" and Constants.receiver_option[self.round_number] == "reject"
 
 class FeedbackPage(Page):
+	# shown only after had one round of feedback
+	# recall values from last round
 	def vars_for_template(self):
 		active_player_id = self.group.active_player_id()
+		decrement_round_number = self.round_number - 1
+		player_option = Constants.receiver_option[self.round_number - 1]
 		rating = self.group.in_round(self.round_number -1).get_rating_display()
 		rejected = self.group.in_round(self.round_number - 1).get_rejected_display()
 		kept = self.group.in_round(self.round_number - 1).kept
 		offer = Constants.endowment - kept
 		return {
+			'decrement_round_number': decrement_round_number,
+			'player_option': player_option,
 			'other_player': active_player_id,
 			# TODO: implement more general photo file structure for larger participant list
 			'image_path': 'dictator_sp/img{}.jpg'.format(active_player_id),
@@ -115,7 +134,7 @@ class FeedbackPage(Page):
 		}
 	def is_displayed(self):
 		# show only to active dictator
-		return self.player.role() == "dictator" and self.player.is_active() and self.round_number >= 2 
+		return self.player.role() == "dictator" and self.player.is_active() and self.round_number > 1 # and Constants.receiver_option[self.round_number] in ["rating", "reject"]
 
 class ToggleWaitPage(WaitPage):
 	"""shown when ready to switch dictators - functionally, this is the end of the round"""
@@ -155,6 +174,6 @@ page_sequence = [
 	Rating,
 	NoActionResult,
 	RejectionOption,
-	ToggleWaitPage,
+	# ToggleWaitPage,
 	FinalPage
 ]

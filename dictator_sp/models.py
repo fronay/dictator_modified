@@ -3,6 +3,8 @@ from otree.api import (
 	Currency as c, currency_range
 )
 import random
+import csv
+import os 
 
 # ------------------------
 doc = """
@@ -10,9 +12,36 @@ Iterated Dictator Game (version with 2 players, one player incentivised)
 """
 
 class Subsession(BaseSubsession):
-	pass
+	def creating_session(self):
+		if self.round_number == 1:
+			for p in self.get_players():
+				p.participant.vars['receiver_option'] = "nothing"
 
 class Constants(BaseConstants):
+	# try an import from csv
+	# base dir is the otree main directory
+
+	BASE_DIR = os.getcwd()
+	FILE_NAME = BASE_DIR + "/dictator_sp/round_data.csv"
+	# open round data file
+	with open(FILE_NAME, 'rU') as f:  
+		reader = csv.reader(f)
+		# read csv into a list of lists
+		data = list(list(rec) for rec in csv.reader(f, delimiter=';')) 
+		dictator_sharing_incentive = {}
+		receiver_option = {}
+		for i, row in enumerate(data):
+			# this alone will print all the computer names
+			if i > 0:
+				roundnumber = int(row[0])
+				sharing_incentive = row[1]
+				# if sharing incentive is a comma-separated number (in some excel versions), replace with dot before conversion to floating point
+				if "," in sharing_incentive:
+					sharing_incentive = sharing_incentive.replace(",", ".")
+				sharing_incentive = float(sharing_incentive)
+				dictator_sharing_incentive[roundnumber] = sharing_incentive
+				receiver_option[roundnumber] = str(row[2])
+
 	# use_dictator_bots is used in rest of app to modify behavior
 	use_dictator_bots = False 
 	# use_dictator_bots = settings.SESSION_CONFIGS[0]["use_dictator_bots"]

@@ -8,8 +8,10 @@
 	Welcome to game round number <strong> {{round_number}}</strong>
 </p>
 <p>
-Participant number <strong> {{participant_id}}</strong>, in your function as <strong>{{role}}</strong>, please decide how much you will keep for yourself.
+Participant number <strong> {{participant_id}}</strong>, in your function as <strong>{{role}}</strong>, please decide how much you will keep for yourself. <br>
+You can give between 0 and 100 points to the other participant - this round, for every <strong>1</strong> point you give to the other participant they will receive <strong>{{dictator_sharing_incentive}}</strong> point(s).
 </p>
+
 
 {% formfield group.kept %}
 
