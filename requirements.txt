@@ -1,7 +1,8 @@
 # this is for Heroku and other servers.
 # Locally, you should install requirements_base.txt
--r requirements_server.txt
 
 [requires]
-python_version = "3.6"⏎
+python_version = "3.6"
+
+-r requirements_server.txt
 
