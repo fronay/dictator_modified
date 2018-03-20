@@ -3,6 +3,4 @@
 # -r requirements_base.txt
 psycopg2>=2.5.1
 otree>=2.0.29
-
-[require]
 python_version = "3.6"
