@@ -4,5 +4,5 @@
 [requires]
 python_version = "3.6"
 
--r requirements_server.txt
+# -r requirements_server.txt
 
