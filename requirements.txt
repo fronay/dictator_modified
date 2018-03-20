@@ -4,5 +4,5 @@
 psycopg2>=2.5.1
 otree>=2.0.29
 
-[requires]
+[require]
 python_version = "3.6"
