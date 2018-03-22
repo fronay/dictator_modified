@@ -1,6 +1,7 @@
 # this is for Heroku and other servers.
 # Locally, you should install requirements_base.txt
 -r requirements_base.txt
+## potentially not needed:
 # psycopg2>=2.5.1
-#otree>=2.0.29
-#python_version=="3.6"
+# otree>=2.0.29
+# python_version=="3.6"

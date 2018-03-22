@@ -1,1 +1,2 @@
+# dont need django req explicit anymore
 otree>=2.0.29
