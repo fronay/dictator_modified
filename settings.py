@@ -82,13 +82,13 @@ oTree games
 """
 
 mturk_hit_settings = {
-    'keywords': ['easy', 'bonus', 'choice', 'study'],
-    'title': 'Title for your experiment',
-    'description': 'Description for your experiment',
+    'keywords': ['multiplayer'],
+    'title': 'Sandbox test of dictator game',
+    'description': 'Play a game giving or receiving rewards with another person online',
     'frame_height': 500,
     'preview_template': 'global/MTurkPreview.html',
-    'minutes_allotted_per_assignment': 60,
-    'expiration_hours': 7*24,  # 7 days
+    'minutes_allotted_per_assignment': 30,
+    'expiration_hours': 12, # 0.5 days
     # 'grant_qualification_id': 'YOUR_QUALIFICATION_ID_HERE',# to prevent retakes
     # to use qualification requirements, you need to uncomment the 'qualification' import
     # at the top of this file.
@@ -102,7 +102,7 @@ mturk_hit_settings = {
 
 SESSION_CONFIG_DEFAULTS = {
     'real_world_currency_per_point': 0.000,
-    'participation_fee': 0.00,
+    'participation_fee': 0.50, # obviously changes with actual task
     'mturk_hit_settings': mturk_hit_settings,
     'use_browser_bots': False,
     'doc': "TBC",
