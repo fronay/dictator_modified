@@ -128,7 +128,7 @@ SESSION_CONFIGS = [
         'name': 'dictator_sp',
         'display_name': 'TEST (ONGOING) - Incentivised 2-player Dictator Experiment / version sp',
         'app_sequence': ['dictator_sp'],
-        'num_rounds': 2,
+        'num_rounds': 3,
         'options': "reject",
         'num_demo_participants': 4,
     },
@@ -137,7 +137,7 @@ SESSION_CONFIGS = [
         'display_name': 'Landing page, survey/ comprehension check and wait page before actual multiplayer experiment',
         'app_sequence': ['pre_game_survey', 'dictator_sp'],
         'num_rounds': 10,
-        'num_demo_participants': 2,
+        'num_demo_participants': 4,
     }
 ]
 
