@@ -31,6 +31,22 @@ def vars_for_all_templates(self):
 			"role": self.player.role
 	}
 
+class LandingPage(Page):
+	"""an example mturk landing page with a comprehension check for grouping by wait time afterwards"""
+	form_model = "player"
+	form_fields = ["mturkID","age"]
+	def is_displayed(self):
+		return self.round_number == 1
+
+class GroupingPage(WaitPage):
+	group_by_arrival_time = True
+	def vars_for_template(self):
+		return {
+			"body_text": "Waiting for other player to arrive..."
+		}
+	def is_displayed(self):
+		return self.round_number == 1
+
 class Introduction(Page):
 	"""intro page with instructions, should show for all players"""
 	# this should only be shown at the start
@@ -43,7 +59,7 @@ class Introduction(Page):
 
 class Prediction(Page):
 	"""prediction page for potential amount received, should only show for receiver"""
-	form_model = models.Group
+	form_model = "group"
 	form_fields = ["predicted"]
 	def vars_for_template(self):
 		active_player_id = self.group.active_player_id()
@@ -58,7 +74,7 @@ class Prediction(Page):
 class Offer(Page):
 	"""offer page for dictator to decide how much to share with receiver
 	...should only be seen by active dictator"""
-	form_model = models.Group
+	form_model = "group"
 	form_fields = ["kept"]
 	def vars_for_template(self):
 		return {
@@ -93,7 +109,7 @@ class NoActionResult(Page):
 
 class Rating(NoActionResult):
 	"""receiver rates fairness of offer"""
-	form_model = models.Group
+	form_model = "group"
 	form_fields = ["rating"]
 	def is_displayed(self):
 		# return self.player.role() == "receiver" and self.participant.vars['receiver_option'] == "rating_option"
@@ -102,7 +118,7 @@ class Rating(NoActionResult):
 
 class RejectionOption(NoActionResult):
 	"""receiver sees offer and has option of rejecting or accepting """
-	form_model = models.Group
+	form_model = "group"
 	form_fields = ["rejected"]
 	def is_displayed(self):
 		# return self.player.role() == "receiver" and self.participant.vars['receiver_option'] == "reject_option"
@@ -166,6 +182,8 @@ class FinalPage(Page):
 		return self.round_number >= Constants.return_num_rounds(self)
 
 page_sequence = [
+	LandingPage,
+	# GroupingPage,
 	Introduction,
 	Prediction,
 	FeedbackPage,

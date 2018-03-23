@@ -1,0 +1,19 @@
+{% extends "dictator_modified/StyledPage.html" %}
+
+{% comment %} 
+	Delete/comment out "extends" line above and revert to this if only want global style:
+	{% extends "global/Page.html" %} 
+{% endcomment %}
+
+{% load otree_tags %}
+
+{% block title %}Welcome + Comprehension Check{% endblock %}
+
+{% block content %}
+<p> Welcome to the game!</p>
+<p> Before you start the game, please briefly fill out the following information and make sure you pass the comprehension check.</p>
+{% formfield player.age %}
+{% formfield player.mturkID %}
+
+{% next_button %}
+{% endblock %}

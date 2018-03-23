@@ -107,6 +107,8 @@ class Group(BaseGroup):
 		dictator.payoff = self.kept
 
 class Player(BasePlayer):
+	mturkID = models.StringField()
+	age = models.IntegerField()
 	def is_active(self):
 		return True if self.id_in_group == self.group.active_player_id() else False
 	def role(self):

@@ -115,21 +115,28 @@ SESSION_CONFIGS = [
         'display_name': 'Single Player Dictator Experiment / version bt',
         'app_sequence': ['dictator_bt'],
         'num_rounds': 3,
-        'num_demo_participants': 1,
+        'num_demo_participants': 3,
     },
     { 
         'name': 'dictator_modified',
         'display_name': '3 Player Dictator Experiment / version reg',
         'app_sequence': ['dictator_modified'],
         'num_rounds': 3,
-        'num_demo_participants': 3,
+        'num_demo_participants': 6,
     },
     { 
         'name': 'dictator_sp',
-        'display_name': 'TEST (ONGOING) - Incentivised 2-player Dictator Experiment / version tp',
+        'display_name': 'TEST (ONGOING) - Incentivised 2-player Dictator Experiment / version sp',
         'app_sequence': ['dictator_sp'],
         'num_rounds': 10,
         'options': "reject",
+        'num_demo_participants': 4,
+    },
+        { 
+        'name': 'pre_game_survey',
+        'display_name': 'Landing page, survey/ comprehension check and wait page before actual multiplayer experiment',
+        'app_sequence': ['pre_game_survey'],
+        'num_rounds': 10,
         'num_demo_participants': 2,
     }
 ]
