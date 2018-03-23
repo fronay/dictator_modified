@@ -1,11 +1,11 @@
 Round;dictator_sharing_incentive;receiver_option
-1;1;nothing
+1;1;reject
 2;0,5;rating
-3;0,5;rating
-4;0,5;reject
-5;0,5;reject
+3;0,5;reject
+4;0,5;nothing
+5;0,5;rating
 6;1;reject
-7;1;reject
+7;1;nothing
 8;1;rating
-9;1;nothing
+9;1;reject
 10;2;nothing

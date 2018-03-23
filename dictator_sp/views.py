@@ -82,14 +82,14 @@ class Offer(Page):
 		}
 	def is_displayed(self):
 		# show only to active dictator
-		return self.player.role() == "dictator" and self.player.is_active()
+		return self.player.role() == "dictator"
 	def before_next_page(self):
 		self.group.set_payoffs()
 
 class WaitForOffer(WaitPage):
 	def vars_for_template(self):
 		return {
-			"body_text": "Waiting for other player's offer"
+			"body_text": "Waiting for other player's reaction"
 		}
 	def is_displayed(self):
 		return self.player.role() == "receiver"
@@ -119,22 +119,36 @@ class Rating(NoActionResult):
 class RejectionOption(NoActionResult):
 	"""receiver sees offer and has option of rejecting or accepting """
 	form_model = "group"
-	form_fields = ["rejected"]
+	form_fields = ["rejection_option"]
 	def is_displayed(self):
 		# return self.player.role() == "receiver" and self.participant.vars['receiver_option'] == "reject_option"
 		print("evaluating RejectionOption: ", Constants.receiver_option[self.round_number])
 		return self.player.role() == "receiver" and Constants.receiver_option[self.round_number] == "reject"
+
+class ToggleWaitPage(WaitPage):
+	"""wait page for dictator"""
+	def vars_for_template(self):
+		# get activity status of players from tracking dictionary in models:
+		# generate message for wait screen during testing:
+		# inputs = (self.player.id_in_group, self.player.role()) 
+				# self.player.is_active(models.ACTIVE_PLAYER_ID))
+		body_text = "Waiting for feedback from the other player."
+		# conditionally add a message about the dictator's sharing choice if they were active last round:
+		if self.player.role() == "dictator": # and self.player.is_active():
+			choice_message = "You completed your turn. You kept {0} out of {1} off the payoff. \n \n".format(self.group.kept, Constants.endowment)
+			body_text = choice_message + body_text
+		return {"body_text": body_text}
 
 class FeedbackPage(Page):
 	# shown only after had one round of feedback
 	# recall values from last round
 	def vars_for_template(self):
 		active_player_id = self.group.active_player_id()
-		decrement_round_number = self.round_number - 1
-		player_option = Constants.receiver_option[self.round_number - 1]
-		rating = self.group.in_round(self.round_number -1).get_rating_display()
-		rejected = self.group.in_round(self.round_number - 1).get_rejected_display()
-		kept = self.group.in_round(self.round_number - 1).kept
+		decrement_round_number = self.round_number
+		player_option = Constants.receiver_option[self.round_number]
+		rating = self.group.in_round(self.round_number).get_rating_display()
+		rejection_option = self.group.in_round(self.round_number).get_rejection_option_display()
+		kept = self.group.in_round(self.round_number).kept
 		offer = Constants.endowment - kept
 		return {
 			'decrement_round_number': decrement_round_number,
@@ -146,52 +160,33 @@ class FeedbackPage(Page):
 			'kept': kept,
 			'offer': offer,
 			'rating': rating,
-			'rejected': rejected
+			'rejection_option': rejection_option
 		}
 	def is_displayed(self):
 		# show only to active dictator
-		return self.player.role() == "dictator" and self.player.is_active() and self.round_number > 1 # and Constants.receiver_option[self.round_number] in ["rating", "reject"]
-
-class ToggleWaitPage(WaitPage):
-	"""shown when ready to switch dictators - functionally, this is the end of the round"""
-	def after_all_players_arrive(self):
-		# set payoffs here if in 3-person game
-		# TODO: migrate to before_next_page on offer page, since all info there already!
-		self.group.set_payoffs()
-
-	def vars_for_template(self):
-		# get activity status of players from tracking dictionary in models:
-		# generate message for wait screen during testing:
-		inputs = (self.player.id_in_group, self.player.role()) 
-				# self.player.is_active(models.ACTIVE_PLAYER_ID))
-		body_text = """Thanks for your patience, participant {0}. Your role is (still) {1}.\n \n
-				Waiting for the other 2 participants to end their turn.""".format(*inputs)
-		# conditionally add a message about the dictator's sharing choice if they were active last round:
-		if self.player.role() == "dictator" and self.player.is_active():
-			choice_message = "You completed your turn. You kept {0} out of {1} off the payoff. \n \n".format(self.group.kept, Constants.endowment)
-			body_text = choice_message + body_text
-		return {"body_text": body_text}
+		return self.player.role() == "dictator" and self.player.is_active() # and self.round_number > 1 # and Constants.receiver_option[self.round_number] in ["rating", "reject"]
 
 class FinalPage(Page):
-	"""def vars_for_template(self):
+	def vars_for_template(self):
+		# self.player.completion_code = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(9))
 		return {
-			'round_number': self.round_number,
-		}"""
+			'completion_code': self.participant.code, 
+		}
 	def is_displayed(self):
 		# this is shown at the end of the round
 		return self.round_number >= Constants.return_num_rounds(self)
 
 page_sequence = [
-	LandingPage,
-	# GroupingPage,
+	# LandingPage,
+	GroupingPage,
 	Introduction,
 	Prediction,
-	FeedbackPage,
 	Offer,
 	WaitForOffer,
 	Rating,
 	NoActionResult,
 	RejectionOption,
-	# ToggleWaitPage,
+	ToggleWaitPage,
+	FeedbackPage,
 	FinalPage
 ]

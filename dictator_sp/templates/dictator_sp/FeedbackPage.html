@@ -9,14 +9,17 @@
 </p>
 <p>
 You decided to keep <strong>{{kept}}</strong> and offer <strong>{{offer}}</strong>. <br>
+</p>
 
-{% if player_option == "reject" %}
-    The other player chose to <strong>{{rejected}}</strong> your offer. 
+<p>
+{% if player_option == "reject" and rejection_option == "Accept" %}
+	The other player chose to <strong>accept</strong> your offer. 
+{% elif player_option == "reject" and rejection_option == "Reject"  %}
+	The other player chose to <strong>reject</strong> your offer. 
+    This means <strong>neither</strong> of you will receive any points.
 {% elif player_option == "rating" %}
-    The other player rated this offer as <strong>{{rating}}</strong>.
+	The other player rated this offer as <strong>{{rating}}</strong>.
 {% endif %}
-<!--The other player rated this as <strong>{{rating}}</strong>, while choosing to <strong>{{rejected}}</strong> your offer. <br>-->
-
 </p>
 
 {% next_button %}

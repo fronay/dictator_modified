@@ -5,6 +5,7 @@ from otree.api import (
 import random
 import csv
 import os 
+import string
 
 # ------------------------
 doc = """
@@ -88,7 +89,7 @@ class Group(BaseGroup):
 		]
 	)
 
-	rejected = models.PositiveIntegerField(
+	rejection_option = models.PositiveIntegerField(
     choices=[
         [1, 'Accept'],
         [0, 'Reject'],
@@ -109,6 +110,7 @@ class Group(BaseGroup):
 class Player(BasePlayer):
 	mturkID = models.StringField()
 	age = models.IntegerField()
+	# completion_code = models.CharField()
 	def is_active(self):
 		return True if self.id_in_group == self.group.active_player_id() else False
 	def role(self):

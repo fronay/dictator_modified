@@ -3,8 +3,10 @@ from ._builtin import Page, WaitPage
 from .models import Constants
 
 
-class MyPage(Page):
-    pass
+class LandingPage(Page):
+	"""an example mturk landing page with a comprehension check for grouping by wait time afterwards"""
+	form_model = "player"
+	form_fields = ["mturkID","age"]
 
 
 class ResultsWaitPage(WaitPage):
@@ -18,7 +20,7 @@ class Results(Page):
 
 
 page_sequence = [
-    MyPage,
-    ResultsWaitPage,
-    Results
+    LandingPage,
+    #ResultsWaitPage,
+    # Results
 ]

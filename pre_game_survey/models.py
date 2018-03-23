@@ -26,4 +26,5 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    pass
+	mturkID = models.StringField()
+	age = models.IntegerField()
